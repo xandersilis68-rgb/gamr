@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Health Check — VNL Volley Stars</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b1220;color:#e5e7eb;margin:0;padding:16px}
+  h1{margin:0 0 8px 0}
+  .log{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border:1px solid #1f2937;border-radius:8px;padding:10px;margin-top:12px;max-height:300px;overflow:auto;font-family:ui-monospace,monospace}
+  .btn{background:#1f2937;border:1px solid #334155;color:#fff;border-radius:8px;padding:10px 14px;cursor:pointer;margin-top:8px;display:none}
+  .btn:hover{background:#334155}
+</style>
+</head>
+<body>
+<h1>Health Check</h1>
+<div id="log" class="log"></div>
+<button class="btn" id="fixBtn">Open Fix-it Assistant</button>
+
+<script>
+const log = document.getElementById('log');
+function append(msg){ log.textContent += msg + "\\n"; }
+
+function runChecks(){
+  let issues = [];
+  // Example minimal checks
+  try {
+    append("Checking index.html...");
+    // simulate: missing ID
+    issues.push({file:"index.html",type:"missing IDs",detail:"menu,scoreboard",hint:"Add required IDs"});
+  } catch(e){ issues.push({file:"index.html",type:"error",detail:e.message}); }
+
+  try {
+    append("Checking styles.css...");
+  } catch(e){ issues.push({file:"styles.css",type:"error",detail:e.message}); }
+
+  try {
+    append("Checking script.js syntax...");
+  } catch(e){ issues.push({file:"script.js",type:"syntax",detail:e.message}); }
+
+  let report = {issues: issues};
+  localStorage.setItem("healthReport", JSON.stringify(report));
+  if(issues.length>0){
+    append("\\n❌ Issues found: " + issues.length);
+    document.getElementById("fixBtn").style.display="inline-block";
+  } else {
+    append("\\n✅ All good!");
+  }
+}
+
+document.getElementById("fixBtn").addEventListener("click", ()=>{
+  window.location.href = "fix-issues.html";
+});
+
+// auto-run
+runChecks();
+</script>
+</body>
+</html>

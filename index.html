@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VNL Volley Stars</title>
+  <link rel="preconnect" href="https://upload.wikimedia.org">
+  <link rel="preconnect" href="https://en.wikipedia.org">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="bg-anim"></div>
+    <header class="topbar">
+      <h1>VNL Volley Stars</h1>
+      <div class="coins" title="Coins"><span id="coin-count">0</span> 🟡</div>
+      <button id="btn-settings" class="ghost">⚙</button>
+    </header>
+
+    <main id="main">
+      <section id="menu" class="screen visible">
+        <div class="menu-panel">
+          <button id="btn-play" class="cta">Play Match</button>
+          <button id="btn-packs" class="cta">Open Packs</button>
+          <button id="btn-collection" class="cta">Collection</button>
+          <button id="btn-shop" class="cta">Shop</button>
+          <button id="btn-import" class="ghost">Import/Export Save</button>
+          <button id="btn-build" class="ghost">Build/Refresh Real Player DB</button>
+        </div>
+        <div class="ticker">
+          <span>Arcade volleyball with real rosters • Build your 6-player lineup • Win coins • Unlock achievements • Duplicates → coins</span>
+        </div>
+      </section>
+
+      <section id="packs" class="screen">
+        <h2>Pack Opening</h2>
+        <div id="pack-stack"></div>
+        <div id="pack-cards" class="card-grid"></div>
+        <button id="packs-back" class="ghost">⬅ Back</button>
+      </section>
+
+      <section id="collection" class="screen">
+        <h2>Your Collection</h2>
+        <div class="filters">
+          <select id="filter-gender">
+            <option value="">All genders</option>
+            <option value="female">Women</option>
+            <option value="male">Men</option>
+          </select>
+          <select id="filter-source">
+            <option value="">All sources</option>
+            <option value="VNL">VNL</option>
+            <option value="Europe">Europe</option>
+            <option value="Pacific">Pacific</option>
+            <option value="Pacific Games">Pacific Games</option>
+            <option value="AUS">Australia</option>
+          </select>
+          <input id="search-name" placeholder="Search name or country..." />
+        </div>
+        <div id="collection-grid" class="card-grid"></div>
+        <button id="collection-back" class="ghost">⬅ Back</button>
+      </section>
+
+      <section id="shop" class="screen">
+        <h2>Shop</h2>
+        <div id="shop-packs" class="pack-grid"></div>
+        <button id="shop-back" class="ghost">⬅ Back</button>
+      </section>
+
+      <section id="match" class="screen">
+        <h2 class="sr-only">Match</h2>
+        <div id="scorebar">
+          <div><span id="score-left">0</span></div>
+          <div class="set-info"><span id="set-count">Set 1 / Best of 3</span></div>
+          <div><span id="score-right">0</span></div>
+        </div>
+        <canvas id="game" width="1200" height="600"></canvas>
+        <div id="mobile-controls">
+          <div class="joy"></div>
+          <div class="btn-row">
+            <button data-act="jump">⤒</button>
+            <button data-act="attack">Z</button>
+            <button data-act="pass">X</button>
+            <button data-act="block">C</button>
+          </div>
+        </div>
+        <div id="banners"></div>
+        <button id="match-back" class="ghost">⬅ Forfeit</button>
+      </section>
+
+      <section id="settings" class="screen">
+        <h2>Settings / Save</h2>
+        <div class="card">
+          <button id="btn-export">Export Save</button>
+          <input id="file-import" type="file" accept="application/json" />
+        </div>
+        <div class="card">
+          <label><input id="toggle-sfx" type="checkbox" checked> Sound Effects</label>
+          <label><input id="toggle-perf" type="checkbox"> Battery Saver (30 FPS)</label>
+        </div>
+        <button id="settings-back" class="ghost">⬅ Back</button>
+      </section>
+    </main>
+
+    <footer class="bottombar">
+      <small>Data: Wikipedia & Wikidata (images via Wikimedia Commons). Fan-made arcade game.</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

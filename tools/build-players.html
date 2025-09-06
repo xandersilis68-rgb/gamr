@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build Players — VNL + Europe + Pacific (uncapped)</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#0f172a;color:#fff;padding:16px}
+  button{background:#1f2937;border:1px solid #334155;color:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+  button:hover{background:#334155}
+  .log{white-space:pre-wrap;background:#0b1220;border:1px solid #1f2937;border-radius:12px;padding:12px;min-height:200px;margin-top:12px}
+  code,kbd{background:#111827;border:1px solid #1f2937;border-radius:6px;padding:2px 6px}
+</style>
+</head>
+<body>
+<h1>🏗 Build Real Players (VNL + Europe + Pacific — last 7y, uncapped)</h1>
+<p>Click <kbd>Fetch & Download</kbd> to gather players from VNL <strong>2018–2025</strong>, all European national teams, Pacific national teams, and Pacific Games (2019 & 2023). It will dedupe, resolve real Wikimedia images, compute stats/rarities, and download <code>players.json</code>. It will also report the total count.</p>
+<button id="go">Fetch & Download</button>
+<div class="log" id="log"></div>
+
+<script>
+const LOG = document.getElementById('log');
+const log = (m) => { LOG.textContent += m + "\\n"; LOG.scrollTop = LOG.scrollHeight; };
+
+const POS_MAP = {"outside hitter":"OH","wing spiker":"OH","universal":"OH","middle blocker":"MB","setter":"S","opposite hitter":"OP","opposite":"OP","libero":"L","defensive specialist":"L"};
+const POS = ["S","OH","MB","OP","L"];
+
+const VNL_YEARS = [2018,2019,2021,2022,2023,2024,2025]; // 2020 VNL cancelled
+const VNL_SOURCES = [];
+for(const y of VNL_YEARS){
+  VNL_SOURCES.push(`https://en.wikipedia.org/wiki/${y}_FIVB_Men%27s_Volleyball_Nations_League_squads`);
+  VNL_SOURCES.push(`https://en.wikipedia.org/wiki/${y}_FIVB_Women%27s_Volleyball_Nations_League_squads`);
+}
+
+// Pacific Games pages
+const PACIFIC_GAMES_SOURCES = [
+  "https://en.wikipedia.org/wiki/Volleyball_at_the_2019_Pacific_Games",
+  "https://en.wikipedia.org/wiki/Volleyball_at_the_2023_Pacific_Games"
+];
+
+// Pacific & Oceania nations/territories
+const PACIFIC_COUNTRIES = [
+  "Australia","New Zealand","Fiji","Papua New Guinea","Solomon Islands","Vanuatu","Samoa","American Samoa",
+  "Tonga","Cook Islands","Niue","French Polynesia","Tahiti","New Caledonia","Wallis and Futuna",
+  "Kiribati","Nauru","Tuvalu","Marshall Islands","Palau","Micronesia","Federated States of Micronesia",
+  "Guam","Northern Mariana Islands","Tokelau","East Timor","Timor-Leste"
+];
+
+// Europe (broad list of national teams)
+const EUROPE_COUNTRIES = [
+  "Albania","Andorra","Armenia","Austria","Azerbaijan","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia",
+  "Cyprus","Czech Republic","Czechia","Denmark","England","Estonia","Faroe Islands","Finland","France","Georgia","Germany",
+  "Greece","Hungary","Iceland","Ireland","Israel","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg",
+  "Malta","Moldova","Monaco","Montenegro","Netherlands","North Macedonia","Northern Ireland","Norway","Poland","Portugal",
+  "Romania","Russia","San Marino","Scotland","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Turkey","Ukraine","Wales"
+];
+
+function teamPagesFor(country){
+  const slug = country.replaceAll(' ','_');
+  return [
+    `https://en.wikipedia.org/wiki/${slug}_men%27s_national_volleyball_team`,
+    `https://en.wikipedia.org/wiki/${slug}_women%27s_national_volleyball_team`
+  ];
+}
+
+const ALL_SOURCES = [
+  ...VNL_SOURCES,
+  ...PACIFIC_GAMES_SOURCES,
+  ...PACIFIC_COUNTRIES.flatMap(teamPagesFor),
+  ...EUROPE_COUNTRIES.flatMap(teamPagesFor)
+];
+
+async function fetchText(u){
+  try{
+    const r = await fetch(u, {mode:'cors'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.text();
+  }catch(e){
+    log(`• Skip ${u} (${e.message})`);
+    return "";
+  }
+}
+function countryFromTitle(html){
+  const mh = html.match(/<h1[^>]*>(.*?)<\/h1>/i);
+  if(!mh) return "";
+  const title = mh[1].replace(/<[^>]+>/g,'').trim();
+  return title.replace(/(men|women).*/i,'').replace(/ national volleyball team.*/i,'').trim();
+}
+function parseCandidatesFromHTML(html, defaultCountry=""){
+  const out = [];
+  const cleaned = html.replace(/\s+/g,' ');
+  const li = cleaned.match(/<li>.*?<\/li>/gi) || [];
+  for(const row of li){
+    const plain = row.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    const m = plain.match(/([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' -]+)\s+(S|OH|MB|OP|L)\b/);
+    if(m){ out.push({name:m[1].trim(), pos:m[2].toUpperCase(), country: defaultCountry||"", gender:""}); continue; }
+    const m2 = plain.match(/([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' -]+)\s+\(([^)]+)\)/);
+    if(m2){ const pos = POS_MAP[m2[2].toLowerCase()]; if(pos) out.push({name:m2[1].trim(), pos, country: defaultCountry||"", gender:""}); }
+  }
+  const trs = cleaned.match(/<tr>.*?<\/tr>/gi) || [];
+  for(const tr of trs){
+    const plain = tr.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    const m = plain.match(/([A-Z][A-Za-zÀ-ÖØ-öø-ÿ' -]+)\s+(S|OH|MB|OP|L)\b/);
+    if(m) out.push({name:m[1].trim(), pos:m[2].toUpperCase(), country: defaultCountry||"", gender:""});
+  }
+  return out;
+}
+async function wikiThumbFor(name){
+  const u = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(name);
+  try{
+    const r = await fetch(u, {mode:'cors'});
+    if(!r.ok) return "";
+    const j = await r.json();
+    return j?.thumbnail?.source || "";
+  }catch(e){ return ""; }
+}
+function rarityFromName(n){
+  let h=0; for(let i=0;i<n.length;i++) h=(h*33 + n.charCodeAt(i))>>>0;
+  const r=(h%1000)/1000; if(r>0.97) return 'Legend'; if(r>0.6) return 'Pro'; return 'Starter';
+}
+const BASE = {
+  S:{ atk:40, def:55, srv:60, spd:62 },
+  OH:{ atk:70, def:58, srv:60, spd:58 },
+  MB:{ atk:78, def:70, srv:50, spd:54 },
+  OP:{ atk:82, def:52, srv:62, spd:56 },
+  L:{ atk:20, def:86, srv:40, spd:68 }
+};
+function rollStats(pos, rar){
+  const b = BASE[pos] || BASE.OH;
+  const bump = rar==='Legend'?16: rar==='Pro'?8:0;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const attack = clamp(Math.round(b.atk + (Math.random()*12-6) + bump), 10, 99);
+  const defense = clamp(Math.round(b.def + (Math.random()*12-6) + bump), 10, 99);
+  const serve = clamp(Math.round(b.srv + (Math.random()*12-6) + bump), 10, 99);
+  const overall = Math.round((attack+defense+serve)/3);
+  return {attack, defense, serve, overall};
+}
+
+async function run(){
+  document.getElementById('go').disabled = true;
+  log('Fetching sources… (this may take a while)');
+  const candidates = [];
+  for(const src of ALL_SOURCES){
+    const html = await fetchText(src);
+    if(!html) continue;
+    let countryGuess = "";
+    if(src.includes("_national_volleyball_team")) countryGuess = countryFromTitle(html);
+    const found = parseCandidatesFromHTML(html, countryGuess);
+    if(found.length){ log(`• ${src} → +${found.length}`); candidates.push(...found); }
+    else { log(`• ${src} → 0`); }
+  }
+  // Deduplicate
+  const key = p => (p.name+"|"+(p.country||"")).toLowerCase();
+  const map = new Map();
+  for(const c of candidates){
+    if(!c.name || !c.pos) continue;
+    if(!POS.includes(c.pos)) continue;
+    const k = key(c);
+    if(!map.has(k)) map.set(k,c);
+  }
+  let unique = [...map.values()];
+
+  log("Resolving images & computing stats/rarities…");
+  const players = [];
+  let id = 1;
+  for(const p of unique){
+    const img = await wikiThumbFor(p.name);
+    const rarity = rarityFromName(p.name);
+    const stats = rollStats(p.pos, rarity);
+    players.push({
+      id: id++,
+      name: p.name,
+      country: p.country || "Unknown",
+      gender: p.gender || "",
+      position: p.pos,
+      rarity,
+      stats,
+      image: img || "https://upload.wikimedia.org/wikipedia/commons/3/3f/Volleyball_%28bal%29.png",
+      source: (p.country && EUROPE_COUNTRIES.includes(p.country)) ? "Europe" : (p.country && PACIFIC_COUNTRIES.includes(p.country)) ? "Pacific" : "VNL/PacificGames"
+    });
+  }
+
+  const total = players.length;
+  const blob = new Blob([JSON.stringify(players,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='players.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 400);
+  alert(`✅ Done. Found ${total} players across all sources. Downloaded players.json.`);
+  log(`✅ Done. Found ${total} players. Downloaded players.json.`);
+  document.getElementById('go').disabled = false;
+}
+document.getElementById('go').addEventListener('click', run);
+</script>
+</body>
+</html>

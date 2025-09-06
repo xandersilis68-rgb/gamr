@@ -1,0 +1,48 @@
+/* VNL Volley Stars — minimal, clean style */
+:root{
+  --ink:#0d1321;
+  --ink-2:#1b263b;
+  --pop:#ff4d6d;
+  --pop-2:#ffd166;
+  --field:#e0fbfc;
+  --card:#ffffff;
+  --accent:#00b4d8;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0f1a,#131a2a);color:#fff;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.sr-only{position:absolute;left:-9999px}
+.topbar,.bottombar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(90deg,#0b0f1a,#1a2034);box-shadow:0 2px 12px rgba(0,0,0,.4)}
+.topbar h1{margin:0;font-size:20px;letter-spacing:.5px}
+.topbar .coins{font-weight:700}
+.ghost{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:12px;padding:8px 12px;cursor:pointer}
+.cta{background:linear-gradient(180deg,#ff8fab,#ff4d6d);border:none;color:#111;padding:14px 18px;border-radius:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(255,77,109,.35);}
+#bg-anim{position:fixed;inset:0;background:radial-gradient(1000px 500px at 20% 10%,rgba(255,77,109,.15),transparent),radial-gradient(800px 400px at 80% 80%,rgba(0,180,216,.18),transparent);filter:blur(10px);z-index:-1;animation:floatbg 18s linear infinite alternate}
+@keyframes floatbg{to{transform:translateY(20px)}}
+#main{max-width:1200px;margin:20px auto;padding:0 12px}
+.screen{display:none}
+.screen.visible{display:block}
+.menu-panel{display:grid;gap:12px;max-width:420px;margin:40px auto}
+.ticker{margin-top:24px;text-align:center;opacity:.7}
+.pack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px;backdrop-filter:blur(4px)}
+.card .meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;font-size:12px;opacity:.8}
+.player-card{position:relative;overflow:hidden}
+.player-card .img{background:#0e1422;height:180px;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.player-card img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:8px;left:8px;background:linear-gradient(180deg,#ffd166,#ffb703);color:#111;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:900}
+.badge.legend{background:linear-gradient(180deg,#a0ffea,#00f5d4)}
+.badge.pro{background:linear-gradient(180deg,#fbd3ff,#b5179e)}
+.badge.starter{background:linear-gradient(180deg,#cfd9df,#e2ebf0)}
+button{transition:transform .08s ease,filter .2s}
+button:active{transform:translateY(2px)}
+#scorebar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:8px 0 6px 0}
+#set-count{font-size:14px;opacity:.8}
+#game{width:100%;background:linear-gradient(180deg,#80ed99 40%,#c7f9cc 40%,#c7f9cc 60%,#38a3a5 60%);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#mobile-controls{display:none}
+@media (max-width:900px){
+  #mobile-controls{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+  #mobile-controls .joy{height:82px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px}
+  #mobile-controls .btn-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  #mobile-controls button{padding:12px;border-radius:12px}
+}
