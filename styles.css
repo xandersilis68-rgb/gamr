@@ -2,9 +2,9 @@
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#04070f;color:#e5e7eb;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif}
 .hidden{display:none}
 .scene{position:fixed;inset:0;overflow:hidden}
-.bg-stars{position:absolute;inset:0;background:radial-gradient(1200px 600px at 50% 50%, rgba(20,28,60,.35), transparent), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><circle cx="20" cy="30" r="1" fill="white"/><circle cx="110" cy="90" r="1" fill="white" opacity=".6"/><circle cx="80" cy="140" r="1" fill="white" opacity=".8"/></svg>');background-size:cover,160px 160px;animation:twinkle 20s linear infinite}
+.bg-stars{position:absolute;inset:0;background:radial-gradient(1200px 600px at 50% 50%, rgba(20,28,60,.35), transparent), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><circle cx="20" cy="30" r="1" fill="white"/><circle cx="110" cy="90" r="1" fill="white" opacity=".6"/><circle cx="80" cy="140" r="1" fill="white" opacity=".8"/></svg>');background-size:cover,160px 160px;animation:twinkle 20s linear infinitepointer-events:none;}
 @keyframes twinkle{0%{transform:translateY(0)}100%{transform:translateY(-120px)}}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 60px 60px; transform:perspective(600px) rotateX(60deg) translateY(40%); opacity:.35}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 60px 60px; transform:perspective(600px) rotateX(60deg) translateY(40%); opacity:.35pointer-events:none;}
 .topbar{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:linear-gradient(90deg,#0b1225,#071022);border-bottom:1px solid #182036}
 .brand{font-weight:900;letter-spacing:.8px}
 .brand span{color:#7dd3fc}

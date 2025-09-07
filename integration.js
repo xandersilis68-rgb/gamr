@@ -21,7 +21,7 @@
   let DB = JSON.parse(localStorage.getItem(dbKey) || 'null');
   async function loadDB(){
     try{
-      const r=await fetch('players.json'); if(!r.ok) throw new Error('players.json not found');
+      const r=await fetch('./players.json'); if(!r.ok) throw new Error('players.json not found');
       DB = await r.json();
       DB = DB.map(p=>({
         id:String(p.id), name:p.name, country:p.country||'Unknown',
@@ -35,7 +35,7 @@
   let PACKS = JSON.parse(localStorage.getItem(packsKey) || 'null');
   async function loadPacks(){
     try{
-      const r=await fetch('packs.json'); if(!r.ok) throw new Error('packs.json not found');
+      const r=await fetch('./packs.json'); if(!r.ok) throw new Error('packs.json not found');
       const j=await r.json(); PACKS = [
         {id:'starter',name:'Starter Pack',price:j.Starter.price,pulls:4,weights:j.Starter.distribution},
         {id:'pro',name:'Pro Pack',price:j.Pro.price,pulls:4,weights:j.Pro.distribution},
