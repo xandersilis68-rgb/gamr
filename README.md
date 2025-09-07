@@ -1,25 +1,13 @@
-# VNL Volley Stars
+# VNL Volley Stars (v5.1)
+- Trailmakers-style animated home screen (hero canvas + big PLAY).
+- Proper rally end when ball hits the floor or goes out.
+- Player switching: `Q/E` or number keys `1–6`.
+- Team Select: pick exactly 6 (must include 1 Libero).
+- Pack opening animation: box → 4 flip cards, rarity glow.
+- Error logger + Debug page.
 
-Arcade volleyball + card-collecting game — static build for GitHub Pages.
+## Run
+Open `index.html` (no server needed). For GitHub Pages, commit this folder.
 
-## What’s inside
-
-- **index.html** — Game shell
-- **styles.css** — UI
-- **integration.js** — Canvas engine, AI, packs, collection, **Libero system**
-- **players.json** — 1000 pre-made fake players, **200 Liberos**
-- **packs.json** — Pack prices + rarity distribution
-- **error-logger.js** — Global error logging to localStorage with download
-- **debug.html / debug.js** — Dataset validator, image checker, log tools
-
-## Run locally
-Just open `index.html` in a modern browser (or serve via any static host).
-
-## Debug Tools
-Open `debug.html` to:
-- Validate dataset (count, positions, rarities).
-- HEAD-check image URLs.
-- Download or clear error logs.
-
-## Notes
-This bundle uses placeholder images from Wikimedia which are hotlink-friendly.
+## Controls
+Move ←/→ • Jump Space • Z spike/serve • X pass • C block • Switch Q/E or 1–6.

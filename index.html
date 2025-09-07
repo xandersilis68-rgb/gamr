@@ -1,65 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VNL Volley Stars</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="app">
+  <div class="scene">
+    <div class="bg-stars"></div>
+    <div class="bg-grid"></div>
     <header class="topbar">
-      <h1>VNL Volley Stars</h1>
-      <div class="coins"><span id="coin-count">0</span> 🟡</div>
+      <div class="brand"><span>VNL</span> VOLLEY STARS</div>
+      <div class="coins"><span id="coin-count">0</span><b>🟡</b></div>
     </header>
 
-    <main class="screen" id="menu">
-      <div class="menu">
-        <button id="btn-play" class="primary">Play Match</button>
-        <button id="btn-collection">Collection</button>
-        <button id="btn-shop">Open Packs</button>
-        <button id="btn-settings">Settings</button>
-        <button id="btn-export">Export Save</button>
-        <label class="import-label">Import Save <input type="file" id="file-import" accept="application/json"></label>
-        <a class="ghost" href="debug.html">Open Debug Tools</a>
+    <!-- HOME / HERO -->
+    <section id="home" class="hero">
+      <div class="hero-left">
+        <h1>Build. Collect. <br>Spike to Victory.</h1>
+        <p class="tagline">Arcade volleyball meets card collecting.</p>
+        <div class="cta-row">
+          <button id="play-now" class="btn big primary">► PLAY</button>
+          <button id="open-packs" class="btn big">Open Packs</button>
+          <button id="team-select" class="btn big">Team Select</button>
+        </div>
+        <div class="mini-row">
+          <button id="btn-collection" class="btn ghost">Collection</button>
+          <button id="btn-settings" class="btn ghost">Settings</button>
+          <button id="btn-export" class="btn ghost">Export Save</button>
+          <label class="btn ghost file">Import<input type="file" id="file-import" accept="application/json"></label>
+          <a class="btn link" href="debug.html">Debug</a>
+        </div>
       </div>
-    </main>
+      <div class="hero-right">
+        <canvas id="hero-canvas" width="540" height="360"></canvas>
+        <div class="hero-tips">Q/E or 1–6 switch players • Rally ends when the ball hits the floor.</div>
+      </div>
+    </section>
 
-    <main class="screen hidden" id="match">
+    <!-- MATCH -->
+    <section id="match" class="hidden full">
       <div class="scorebar">
-        <div class="teamstrip" id="strip-left"></div>
+        <div class="strip" id="strip-left"></div>
         <div class="score">
           <span id="score-left">0</span> — <span id="score-right">0</span>
           <small id="set-count">Set 1 / Best of 3</small>
+          <div class="hint">Switch: Q/E or 1–6 • Move: ←/→ • Jump: Space • Z: Spike/Serve • X: Pass • C: Block</div>
         </div>
-        <div class="teamstrip" id="strip-right"></div>
+        <div class="strip" id="strip-right"></div>
       </div>
-      <canvas id="game" width="1200" height="600"></canvas>
-      <div class="controls">
-        <div>←/→ move • Space jump • Z spike/serve • X pass • C block</div>
-        <button id="btn-exit" class="ghost">Exit</button>
-      </div>
-    </main>
+      <canvas id="game" width="1280" height="720"></canvas>
+      <div class="controls"><button id="btn-exit" class="btn ghost">Exit</button></div>
+    </section>
 
-    <main class="screen hidden" id="collection">
+    <!-- TEAM SELECT -->
+    <section id="select" class="hidden">
+      <h2>Team Select (Pick 6 inc. 1 Libero)</h2>
+      <div class="row">
+        <div class="filters">
+          <select id="f-pos">
+            <option value="">All Positions</option>
+            <option>OH</option><option>MB</option><option>OP</option><option>S</option><option value="L">L</option>
+          </select>
+          <input id="f-q" placeholder="Search name or country"/>
+        </div>
+        <div class="picked" id="picked"></div>
+      </div>
+      <div id="sel-grid" class="grid"></div>
+      <div class="row">
+        <button id="btn-save-team" class="btn primary">Save Team</button>
+        <button class="btn ghost back-home">Back</button>
+      </div>
+    </section>
+
+    <!-- COLLECTION -->
+    <section id="collection" class="hidden">
       <h2>Your Collection</h2>
       <div id="collection-grid" class="grid"></div>
-      <button class="ghost" id="back1">Back</button>
-    </main>
+      <div class="row"><button class="btn ghost back-home">Back</button></div>
+    </section>
 
-    <main class="screen hidden" id="shop">
+    <!-- SHOP -->
+    <section id="shop" class="hidden">
       <h2>Shop</h2>
       <div id="shop-grid" class="grid"></div>
-      <button class="ghost" id="back2">Back</button>
-    </main>
+      <div class="row"><button class="btn ghost back-home">Back</button></div>
+    </section>
+  </div>
 
-    <main class="screen hidden" id="settings">
-      <h2>Settings</h2>
-      <div class="row">
-        <label><input type="checkbox" id="sfx" checked> Sound effects</label>
-      </div>
-      <button class="ghost" id="back3">Back</button>
-    </main>
+  <!-- Pack opening overlay -->
+  <div id="pack-overlay" class="overlay hidden">
+    <div class="pack-stage">
+      <div class="pack-box" id="pack-box">Tap to open</div>
+      <div id="cards" class="cards"></div>
+      <button id="close-pack" class="btn ghost hidden">Close</button>
+    </div>
   </div>
 
   <script src="error-logger.js"></script>

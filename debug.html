@@ -1,29 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VNL Debug Tools</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body{padding:16px}
-    pre{white-space:pre-wrap;word-break:break-word;background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:12px}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-    .ok{color:#22c55e}.warn{color:#f59e0b}.err{color:#ef4444}
-  </style>
-</head>
-<body>
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Debug</title><link rel="stylesheet" href="styles.css"></head>
+<body style="padding:16px">
   <h1>VNL Volley Stars — Debug Tools</h1>
-  <div class="row">
-    <button id="btn-load" class="primary">Load players.json</button>
-    <button id="btn-validate">Validate Dataset</button>
-    <button id="btn-imgcheck">Check Images</button>
-    <button id="btn-log-download">Download Error Log</button>
-    <button id="btn-log-clear" class="ghost">Clear Error Log</button>
-  </div>
-  <pre id="out">Ready.</pre>
-
+  <button id="btn-validate" class="btn">Validate players.json</button>
+  <button id="btn-log" class="btn">Download error log</button>
+  <button id="btn-clear" class="btn">Clear error log</button>
+  <pre id="out" style="white-space:pre-wrap;background:#0f172a;padding:12px;border:1px solid #1f2937;border-radius:8px;margin-top:12px"></pre>
   <script src="error-logger.js"></script>
-  <script src="debug.js"></script>
-</body>
-</html>
+  <script>
+    const out = document.getElementById('out');
+    document.getElementById('btn-validate').onclick=async ()=>{
+      try{
+        const r=await fetch('players.json'); const j=await r.json();
+        const tot=j.length, lib=j.filter(p=>p.position==='L').length;
+        const posCount = j.reduce((m,p)=> (m[p.position]=(m[p.position]||0)+1, m), {});
+        out.textContent = 'Players: '+tot+'\nLiberos: '+lib+'\nPositions: '+JSON.stringify(posCount,null,2);
+      }catch(e){ out.textContent='ERR: '+e.message; }
+    };
+    document.getElementById('btn-log').onclick=()=> window.VNLErrorLog.download();
+    document.getElementById('btn-clear').onclick=()=> { window.VNLErrorLog.clear(); alert('Cleared'); };
+  </script>
+</body></html>
