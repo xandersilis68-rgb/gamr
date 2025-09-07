@@ -1,29 +1,25 @@
 # VNL Volley Stars
 
-Arcade, canvas-based volleyball with **real players** (Wikimedia photos), **card packs**, **coins**, **achievements**, and a playable **2D match engine**.
+Arcade volleyball + card-collecting game — static build for GitHub Pages.
 
-## How to use
+## What’s inside
 
-1. Open `tools/build-players.html` in your browser.
-2. Click **Fetch & Download**. It scrapes:
-   - VNL squads **2018–2025** (men & women)
-   - **All European national teams** (men & women)
-   - **Pacific national teams** (last 7 years)
-   - **Pacific Games 2019** & **2023**
-3. When it finishes it will **alert the total players found** and download `players.json`.
-4. Move `players.json` into the project root (next to `index.html`).
+- **index.html** — Game shell
+- **styles.css** — UI
+- **integration.js** — Canvas engine, AI, packs, collection, **Libero system**
+- **players.json** — 1000 pre-made fake players, **200 Liberos**
+- **packs.json** — Pack prices + rarity distribution
+- **error-logger.js** — Global error logging to localStorage with download
+- **debug.html / debug.js** — Dataset validator, image checker, log tools
 
-Then open `index.html` or deploy to GitHub Pages.
+## Run locally
+Just open `index.html` in a modern browser (or serve via any static host).
 
-## Controls
-- **Arrow keys** move
-- **Space/↑** jump
-- **Z** attack/serve
-- **X** pass/set
-- **C** block/dig
+## Debug Tools
+Open `debug.html` to:
+- Validate dataset (count, positions, rarities).
+- HEAD-check image URLs.
+- Download or clear error logs.
 
-## Packs
-- Starter / Pro / Legend; duplicates convert to coins.
-
-## Save
-- LocalStorage, with Import/Export in **Settings**.
+## Notes
+This bundle uses placeholder images from Wikimedia which are hotlink-friendly.

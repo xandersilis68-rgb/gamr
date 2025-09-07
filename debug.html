@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VNL Debug Tools</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{padding:16px}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:12px}
+    .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .ok{color:#22c55e}.warn{color:#f59e0b}.err{color:#ef4444}
+  </style>
+</head>
+<body>
+  <h1>VNL Volley Stars — Debug Tools</h1>
+  <div class="row">
+    <button id="btn-load" class="primary">Load players.json</button>
+    <button id="btn-validate">Validate Dataset</button>
+    <button id="btn-imgcheck">Check Images</button>
+    <button id="btn-log-download">Download Error Log</button>
+    <button id="btn-log-clear" class="ghost">Clear Error Log</button>
+  </div>
+  <pre id="out">Ready.</pre>
+
+  <script src="error-logger.js"></script>
+  <script src="debug.js"></script>
+</body>
+</html>

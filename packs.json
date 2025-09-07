@@ -1,0 +1,26 @@
+{
+  "Starter": {
+    "price": 100,
+    "distribution": {
+      "Starter": 0.78,
+      "Pro": 0.2,
+      "Legend": 0.02
+    }
+  },
+  "Pro": {
+    "price": 500,
+    "distribution": {
+      "Starter": 0.5,
+      "Pro": 0.45,
+      "Legend": 0.05
+    }
+  },
+  "Legend": {
+    "price": 2000,
+    "distribution": {
+      "Starter": 0.12,
+      "Pro": 0.28,
+      "Legend": 0.6
+    }
+  }
+}
